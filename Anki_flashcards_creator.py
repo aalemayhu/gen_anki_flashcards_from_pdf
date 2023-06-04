@@ -30,7 +30,7 @@ def divide_text(text, section_size):
     return sections
 
 # Create Anki cards
-def create_anki_cards(pdf_text,):
+def create_anki_cards(pdf_text, output_name):
     # Limit the number of prompts to avoid excessive API usage
 
     SECTION_SIZE = 1000
@@ -59,16 +59,22 @@ def create_anki_cards(pdf_text,):
             break
 
     # # Save the cards to a text file
-    with open("flashcards.txt", "w") as f:
+    with open(output_name, "w") as f:
         f.write(generated_flashcards)
 
 
 # Main script execution
 if __name__ == "__main__":
 
-    pdf_text = read_pdf(f'{ROOT_DIRECTORY}/SOURCE_DOCUMENTS/constitution.pdf')
-    
-    create_anki_cards(pdf_text)
+    # Read the SOURCE_DOCUMENTS folder and get the list of all the PDFs
+    DOCUMENTS_DIRECTORY = f'{ROOT_DIRECTORY}/SOURCE_DOCUMENTS'
+    OUTPUT_DIRECTORY = f'{ROOT_DIRECTORY}/OUTPUT'
+
+    for file in os.listdir(DOCUMENTS_DIRECTORY):
+            if file.endswith('.pdf'):
+                pdf_text = read_pdf(f'{ROOT_DIRECTORY}/SOURCE_DOCUMENTS/{file}')
+                output_path = f'{OUTPUT_DIRECTORY}/{os.path.basename(file)}.txt'
+                create_anki_cards(pdf_text, output_path)
 
 
 
